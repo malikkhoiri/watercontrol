@@ -1,6 +1,5 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include "Adafruit_Keypad.h"
 
 //Wifi
 #include <Arduino.h>
