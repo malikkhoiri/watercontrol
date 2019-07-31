@@ -228,7 +228,7 @@ int tempNormalization(float val){
 }
 
 int pHNormalization(float val){
-  if(val > 9)
+  if(val > 8)
     return 0;
   else if(val < 6)
     return -1;
