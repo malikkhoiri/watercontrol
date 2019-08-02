@@ -246,13 +246,14 @@ int heightNormalization(float val){
 }
 
 void heaterHandler(float quality){
-  if(quality == 0.01 || quality == 0.09){
+  int q = round(quality * 100);
+  if(q == round(0.01*100) || q == round(0.09*100)){
     digitalWrite(relay, LOW);
     heaterState = 1;
   }
   else {
     digitalWrite(relay, HIGH); 
-    heaterState = 1;
+    heaterState = 0;
   }
 }
 
