@@ -125,6 +125,7 @@ void loop() {
 
   temp = tempNormalization(getTemperature());
   wH = heightNormalization(getWh());
+//  pH = pHNormalization(getPh());
 
 //  Serial.println(getTemperature());
 //  Serial.println(getPh());
