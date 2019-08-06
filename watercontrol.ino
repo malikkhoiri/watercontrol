@@ -42,6 +42,14 @@ DeviceAddress tempDeviceAddress; // We'll use this variable to store a found dev
 
 float w[4] = {0.01404401, 0.54064899, 0.08022875, -0.51533485};
 
+#define ArrayLenth  40
+
+int pHArray[ArrayLenth];
+int pHArrayIndex=0;
+
+float  m = -0.088, _b=36.74;
+static float pHValue;
+
 void setup() {
   // put your setup code here, to run once:
   // start serial port
@@ -129,7 +137,7 @@ void loop() {
     if((rx_byte >= '0' && rx_byte <= '9') || rx_byte == '.')
       _str.concat((char) rx_byte);
   }
-
+  
   if(_str != ""){
     _pH = _str.toFloat();
     pH = pHNormalization(_pH);
@@ -155,6 +163,10 @@ float getTemperature(){
 }
 
 float getPh(){
+
+  pHArray[pHArrayIndex++]=analogRead(A0);
+  if(pHArrayIndex==ArrayLenth)pHArrayIndex=0;
+  pHValue = m * avergearray(pHArray, ArrayLenth) + _b;
   return _pH;
 }
 
@@ -292,4 +304,44 @@ void sendData(float q){
       Serial.printf("[HTTP} Unable to connect\n");
     }
   }
+}
+
+double avergearray(int* arr, int number){
+  int i;
+  int max,min;
+  double avg;
+  long amount=0;
+  if(number<=0){
+    Serial.println(F("Error number for the array to avraging!/n"));
+    return 0;
+  }
+  if(number<5){   //less than 5, calculated directly statistics
+    for(i=0;i<number;i++){
+      amount+=arr[i];
+    }
+    avg = amount/number;
+    return avg;
+  }else{
+    if(arr[0]<arr[1]){
+      min = arr[0];max=arr[1];
+    }
+    else{
+      min=arr[1];max=arr[0];
+    }
+    for(i=2;i<number;i++){
+      if(arr[i]<min){
+        amount+=min;        //arr<min
+        min=arr[i];
+      }else {
+        if(arr[i]>max){
+          amount+=max;    //arr>max
+          max=arr[i];
+        }else{
+          amount+=arr[i]; //min<=arr<=max
+        }
+      }//if
+    }//for
+    avg = (double)amount/(number-2);
+  }//if
+  return avg;
 }
